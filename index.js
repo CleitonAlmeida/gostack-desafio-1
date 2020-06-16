@@ -12,13 +12,54 @@ const projects = [
     }
 ];
 
+//Middlewares
+function checkIdParam(req, res, next){
+    var id = undefined;
+    if(!req.body.id && !req.params.id){
+        return res.status(400).json({message: 'Id is required'});
+    }
+    return next();
+}
+
+function checkIdExists(req, res, next){
+    var id = undefined;
+    id = req.body.id;
+    if(!req.body.id){
+        id = req.params.id;
+    }
+    
+    var found = projects.find(function(element){
+        return element.id == id;
+    });
+
+    console.log(req.url);
+    console.log(req.method);
+
+    if(!found){
+        return res.status(404).json({message: 'Project not found!'});
+    }
+    return next();
+}
+
 server.get('/projects', (req, res) => {
     return res.json(projects);
 });
 
-server.post('/projects', (req, res) => {
+server.post('/projects', checkIdParam, (req, res) => {
     const id = req.body.id;
     const title = req.body.title;
+
+    if(id <= 0){
+        return res.status(400).json({message: 'Invalid id!'});
+    }
+
+    var found = projects.find(function(element){
+        return element.id == id;
+    });
+
+    if(found){
+        return res.status(400).json({message: 'Project already exists!'});
+    }
 
     projects.push( 
         {
@@ -31,7 +72,7 @@ server.post('/projects', (req, res) => {
     return res.json({message: 'Project created!'});
 });
 
-server.post('/projects/:id/tasks', (req, res) => {
+server.post('/projects/:id/tasks', checkIdParam, checkIdExists, (req, res) => {
     const id = req.params.id;
     const title = req.body.title;
 
@@ -39,7 +80,7 @@ server.post('/projects/:id/tasks', (req, res) => {
     return res.json({message: `Task added`});
 });
 
-server.put('/projects/:id', (req, res) => {
+server.put('/projects/:id', checkIdParam, checkIdExists, (req, res) => {
     const id = req.params.id;
     const title = req.body.title;
 
@@ -48,7 +89,7 @@ server.put('/projects/:id', (req, res) => {
     return res.json({message: `Project id ${id} updated`});
 });
 
-server.delete('/projects/:id', (req, res) => {
+server.delete('/projects/:id', checkIdParam, checkIdExists, (req, res) => {
     const id = req.params.id;
 
     projects.splice(id-1, 1);
