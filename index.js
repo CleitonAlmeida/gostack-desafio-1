@@ -28,7 +28,16 @@ server.post('/projects', (req, res) => {
         }
     );
 
-    return res.json({'message': 'Project created!'});
+    return res.json({message: 'Project created!'});
+});
+
+server.put('/projects/:id', (req, res) => {
+    const id = req.params.id;
+    const title = req.body.title;
+
+    projects[id-1].title = title;
+
+    return res.json({message: `Project id ${id} updated`});
 });
 
 server.listen(3000);
