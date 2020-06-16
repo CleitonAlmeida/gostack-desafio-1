@@ -12,6 +12,12 @@ const projects = [
     }
 ];
 
+//Global Middleware
+server.use((req, res, next) => {
+    console.count("countAccess");
+    next();
+})
+
 //Middlewares
 function checkIdParam(req, res, next){
     var id = undefined;
@@ -31,9 +37,6 @@ function checkIdExists(req, res, next){
     var found = projects.find(function(element){
         return element.id == id;
     });
-
-    console.log(req.url);
-    console.log(req.method);
 
     if(!found){
         return res.status(404).json({message: 'Project not found!'});
