@@ -38,6 +38,10 @@ function checkIdExists(req, res, next){
     if(!found){
         return res.status(404).json({message: 'Project not found!'});
     }
+    req.idProject = projects.map(function(project){
+        return project.id
+    }).indexOf(id);
+
     return next();
 }
 
@@ -73,10 +77,10 @@ server.post('/projects', checkIdParam, (req, res) => {
 });
 
 server.post('/projects/:id/tasks', checkIdParam, checkIdExists, (req, res) => {
-    const id = req.params.id;
+    const idProject = req.idProject;
     const title = req.body.title;
 
-    projects[id-1].tasks.push(title);
+    projects[idProject].tasks.push(title);
     return res.json({message: `Task added`});
 });
 
