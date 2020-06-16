@@ -1,6 +1,8 @@
 const express = require('express');
 
 const server = express();
+//To use json on requisitions
+server.use(express.json());
 
 const projects = [
     {
@@ -14,4 +16,19 @@ server.get('/projects', (req, res) => {
     return res.json(projects);
 });
 
-server.listen(3000)
+server.post('/projects', (req, res) => {
+    const id = req.body.id;
+    const title = req.body.title;
+
+    projects.push( 
+        {
+            id: id,
+            title: title,
+            tasks: []
+        }
+    );
+
+    return res.json({'message': 'Project created!'});
+});
+
+server.listen(3000);
