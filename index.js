@@ -31,6 +31,14 @@ server.post('/projects', (req, res) => {
     return res.json({message: 'Project created!'});
 });
 
+server.post('/projects/:id/tasks', (req, res) => {
+    const id = req.params.id;
+    const title = req.body.title;
+
+    projects[id-1].tasks.push(title);
+    return res.json({message: `Task added`});
+});
+
 server.put('/projects/:id', (req, res) => {
     const id = req.params.id;
     const title = req.body.title;
