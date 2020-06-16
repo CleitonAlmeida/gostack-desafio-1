@@ -85,20 +85,20 @@ server.post('/projects/:id/tasks', checkIdParam, checkIdExists, (req, res) => {
 });
 
 server.put('/projects/:id', checkIdParam, checkIdExists, (req, res) => {
-    const id = req.params.id;
+    const idProject = req.idProject;
     const title = req.body.title;
 
-    projects[id-1].title = title;
+    projects[idProject].title = title;
 
-    return res.json({message: `Project id ${id} updated`});
+    return res.json({message: `Project updated`});
 });
 
 server.delete('/projects/:id', checkIdParam, checkIdExists, (req, res) => {
-    const id = req.params.id;
+    const idProject = req.idProject;
 
-    projects.splice(id-1, 1);
+    projects.splice(idProject, 1);
 
-    return res.json({message: `Project id ${id} deleted`});
+    return res.json({message: `Project deleted`});
 });
 
 server.listen(3000);
