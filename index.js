@@ -40,4 +40,12 @@ server.put('/projects/:id', (req, res) => {
     return res.json({message: `Project id ${id} updated`});
 });
 
+server.delete('/projects/:id', (req, res) => {
+    const id = req.params.id;
+
+    projects.splice(id-1, 1);
+
+    return res.json({message: `Project id ${id} deleted`});
+});
+
 server.listen(3000);
